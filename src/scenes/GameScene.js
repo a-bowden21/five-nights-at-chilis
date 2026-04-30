@@ -97,6 +97,27 @@ export class GameScene extends Phaser.Scene {
       color: '#ff0000',
       align: 'center',
     }).setOrigin(0.5).setDepth(90);
+
+    // ---- Keyboard controls ----
+    this.input.keyboard.on('keydown-A', () => {
+      this.toggleLeftDoor();
+    });
+    this.input.keyboard.on('keydown-D', () => {
+      this.toggleRightDoor();
+    });
+    this.input.keyboard.on('keydown-SPACE', () => {
+      if (this.cameraSystem.isOpen) {
+        this.cameraSystem.close();
+        this.cameraBtn.setText('[ OPEN CAMERAS ]');
+        this.setDoorControlsVisible(true);
+        this.sound.play('camera_close');
+      } else {
+        this.cameraSystem.open();
+        this.cameraBtn.setText('[ CLOSE CAMERAS ]');
+        this.setDoorControlsVisible(false);
+        this.sound.play('camera_open');
+      }
+    });
   }
 
   update(time, delta) {
@@ -123,6 +144,14 @@ export class GameScene extends Phaser.Scene {
     let attacked = false;
     for (const enemy of this.enemies) {
       enemy.update(delta);
+
+      // Play movement sound when enemy changes rooms
+      if (enemy.justMoved) {
+        const moveKey = `move_${enemy.id}`;
+        if (this.sound.get(moveKey) || this.cache.audio.has(moveKey)) {
+          this.sound.play(moveKey, { volume: 0.4 });
+        }
+      }
 
       if (enemy.atDoor) {
         // Determine which side the enemy is attacking from

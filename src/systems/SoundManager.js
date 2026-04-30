@@ -16,7 +16,12 @@ export class SoundManager {
     scene.load.audio('camera_open', SoundManager._makeWavURL(rate, SoundManager._genCameraOpen(rate)));
     scene.load.audio('camera_close', SoundManager._makeWavURL(rate, SoundManager._genCameraClose(rate)));
     scene.load.audio('camera_switch', SoundManager._makeWavURL(rate, SoundManager._genCameraSwitch(rate)));
-    scene.load.audio('jumpscare', SoundManager._makeWavURL(rate, SoundManager._genJumpscare(rate)));
+
+    // Character movement sounds
+    scene.load.audio('move_tungtung', SoundManager._makeWavURL(rate, SoundManager._genMoveTungTung(rate)));
+    scene.load.audio('move_ballerina', SoundManager._makeWavURL(rate, SoundManager._genMoveBallerina(rate)));
+    scene.load.audio('move_tralalero', SoundManager._makeWavURL(rate, SoundManager._genMoveTralalero(rate)));
+    scene.load.audio('move_bombardino', SoundManager._makeWavURL(rate, SoundManager._genMoveBombardino(rate)));
   }
 
   // ---- Sound generators (return Float32Array of samples) ----
@@ -161,6 +166,102 @@ export class SoundManager {
       // Noise blast
       const noise = (Math.random() * 2 - 1) * 0.4 * env;
       out[i] = Math.max(-1, Math.min(1, screech1 + screech2 + bass + noise));
+    }
+    return out;
+  }
+
+  /** Tung Tung Tung Sahur — rhythmic drumming footsteps. */
+  static _genMoveTungTung(rate) {
+    const dur = 0.6;
+    const len = Math.floor(rate * dur);
+    const out = new Float32Array(len);
+    for (let i = 0; i < len; i++) {
+      const t = i / rate;
+      // Three rapid drum hits: tung tung tung
+      let val = 0;
+      for (let hit = 0; hit < 3; hit++) {
+        const hitTime = hit * 0.12;
+        const dt = t - hitTime;
+        if (dt >= 0 && dt < 0.1) {
+          const hitEnv = Math.exp(-dt * 30);
+          val += Math.sin(2 * Math.PI * (100 - 40 * dt) * dt) * 0.5 * hitEnv;
+          val += Math.sin(2 * Math.PI * 200 * dt) * 0.2 * hitEnv;
+          val += (Math.random() * 2 - 1) * 0.15 * Math.exp(-dt * 50);
+        }
+      }
+      // Fourth deeper hit (sahur)
+      const dt4 = t - 0.4;
+      if (dt4 >= 0 && dt4 < 0.15) {
+        const env4 = Math.exp(-dt4 * 20);
+        val += Math.sin(2 * Math.PI * 60 * dt4) * 0.6 * env4;
+        val += (Math.random() * 2 - 1) * 0.1 * env4;
+      }
+      out[i] = Math.max(-1, Math.min(1, val));
+    }
+    return out;
+  }
+
+  /** Ballerina Cappuccina — delicate tinkling music box / pirouette sound. */
+  static _genMoveBallerina(rate) {
+    const dur = 0.5;
+    const len = Math.floor(rate * dur);
+    const out = new Float32Array(len);
+    for (let i = 0; i < len; i++) {
+      const t = i / rate;
+      const env = Math.exp(-t * 4);
+      // Music box notes — high pitched, bell-like
+      const note1 = Math.sin(2 * Math.PI * 880 * t) * 0.15 * Math.exp(-t * 8);
+      const note2 = Math.sin(2 * Math.PI * 1320 * t) * 0.12 * Math.exp(-(t - 0.1) * 8) * (t > 0.1 ? 1 : 0);
+      const note3 = Math.sin(2 * Math.PI * 1100 * t) * 0.10 * Math.exp(-(t - 0.2) * 8) * (t > 0.2 ? 1 : 0);
+      // Soft shimmer
+      const shimmer = Math.sin(2 * Math.PI * 2200 * t) * 0.04 * env;
+      // Gentle footstep tap
+      const tap = Math.sin(2 * Math.PI * 300 * t) * 0.1 * Math.exp(-(t - 0.3) * 40) * (t > 0.3 ? 1 : 0);
+      out[i] = Math.max(-1, Math.min(1, note1 + note2 + note3 + shimmer + tap));
+    }
+    return out;
+  }
+
+  /** Tralalero Tralala — wet splashy fish-flopping sound. */
+  static _genMoveTralalero(rate) {
+    const dur = 0.5;
+    const len = Math.floor(rate * dur);
+    const out = new Float32Array(len);
+    for (let i = 0; i < len; i++) {
+      const t = i / rate;
+      // Wet splat
+      const splatEnv = Math.exp(-t * 25);
+      const splat = (Math.random() * 2 - 1) * 0.35 * splatEnv;
+      // Wobbly fish body — low warbling tone
+      const wobble = Math.sin(2 * Math.PI * (120 + 80 * Math.sin(t * 40)) * t) * 0.2 * Math.exp(-t * 6);
+      // Second flop
+      const dt2 = t - 0.2;
+      const flop2 = dt2 > 0 ? (Math.random() * 2 - 1) * 0.25 * Math.exp(-dt2 * 30) : 0;
+      // Bubble/gurgle
+      const bubble = Math.sin(2 * Math.PI * (600 + 400 * Math.sin(t * 25)) * t) * 0.08 * Math.exp(-t * 8);
+      out[i] = Math.max(-1, Math.min(1, splat + wobble + flop2 + bubble));
+    }
+    return out;
+  }
+
+  /** Bombardino Crocodilo — heavy stomping with a low growl. */
+  static _genMoveBombardino(rate) {
+    const dur = 0.6;
+    const len = Math.floor(rate * dur);
+    const out = new Float32Array(len);
+    for (let i = 0; i < len; i++) {
+      const t = i / rate;
+      // Heavy stomp
+      const stompEnv = Math.exp(-t * 15);
+      const stomp = Math.sin(2 * Math.PI * 50 * t) * 0.6 * stompEnv;
+      // Ground impact noise
+      const impact = (Math.random() * 2 - 1) * 0.3 * Math.exp(-t * 35);
+      // Low growl — rumbling frequency modulation
+      const growlEnv = Math.max(0, 1 - t / dur) * Math.min(1, t / 0.1);
+      const growl = Math.sin(2 * Math.PI * (35 + 10 * Math.sin(t * 15)) * t) * 0.25 * growlEnv;
+      // Tail scrape
+      const scrape = Math.sin(2 * Math.PI * (200 + 100 * t) * t) * 0.06 * Math.max(0, t - 0.3) * Math.exp(-(t - 0.3) * 8);
+      out[i] = Math.max(-1, Math.min(1, stomp + impact + growl + (t > 0.3 ? scrape : 0)));
     }
     return out;
   }

@@ -18,6 +18,7 @@ export class Enemy {
     this.pathIndex = 0;
     this.timeSinceLastMove = 0;
     this.atDoor = false;                 // true when they've passed the last room
+    this.justMoved = false;              // true for one frame after moving rooms
   }
 
   /**
@@ -27,6 +28,7 @@ export class Enemy {
   update(delta) {
     if (this.atDoor) return; // already at the office
 
+    this.justMoved = false;
     this.timeSinceLastMove += delta;
 
     if (this.timeSinceLastMove >= this.moveInterval) {
@@ -48,9 +50,11 @@ export class Enemy {
     if (this.pathIndex < this.path.length - 1) {
       this.pathIndex++;
       this.currentRoom = this.path[this.pathIndex];
+      this.justMoved = true;
     } else {
       // Past the last camera room → at the office door
       this.atDoor = true;
+      this.justMoved = true;
     }
   }
 
