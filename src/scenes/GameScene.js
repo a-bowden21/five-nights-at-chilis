@@ -16,7 +16,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('tung-sahur', 'src/images/tung-sahur.png');
+    this.load.image('tung-sahur', '/images/tung-sahur.png');
   }
 
   create() {

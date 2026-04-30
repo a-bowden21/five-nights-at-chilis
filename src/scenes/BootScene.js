@@ -14,7 +14,7 @@ export class BootScene extends Phaser.Scene {
     SoundManager.preload(this);
 
     // Load the Tung Tung Sahur MP3 as the jumpscare sound (overrides procedural one)
-    this.load.audio('jumpscare', '/src/sounds/tung-tung-sahur.mp3');
+    this.load.audio('jumpscare', '/sounds/tung-tung-sahur.mp3');
   }
 
   create() {
