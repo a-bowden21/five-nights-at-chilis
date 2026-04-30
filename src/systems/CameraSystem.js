@@ -194,6 +194,24 @@ export class CameraSystem {
     }).setOrigin(0.5).setDepth(depth).setVisible(false);
     this.mapContainer.push(officeIcon);
 
+    // "You are here" label and arrow pointing up at office
+    const youAreHereLabel = scene.add.text(830, 600, 'YOU ARE HERE', {
+      fontFamily: 'Courier New',
+      fontSize: '11px',
+      color: '#ff0000',
+      fontStyle: 'bold',
+      align: 'center',
+    }).setOrigin(0.5).setDepth(depth + 1).setVisible(false);
+    this.mapContainer.push(youAreHereLabel);
+
+    const youAreHereArrow = scene.add.text(830, 585, '▲', {
+      fontFamily: 'Courier New',
+      fontSize: '18px',
+      color: '#ff0000',
+      fontStyle: 'bold',
+    }).setOrigin(0.5).setDepth(depth + 1).setVisible(false);
+    this.mapContainer.push(youAreHereArrow);
+
     // Draw door labels under each hallway
     const leftDoorLabel = scene.add.text(760, 540, '◄ L Door', {
       fontFamily: 'Courier New',
