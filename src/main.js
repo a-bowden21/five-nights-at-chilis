@@ -10,7 +10,7 @@ const config = {
   width: 1024,
   height: 768,
   backgroundColor: '#000000',
-  parent: document.body,
+   parent: 'game-container',
   scene: [BootScene, MenuScene, GameScene, GameOverScene, WinScene],
   scale: {
     mode: Phaser.Scale.FIT,

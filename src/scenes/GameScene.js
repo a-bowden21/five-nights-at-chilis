@@ -15,6 +15,10 @@ export class GameScene extends Phaser.Scene {
     this.nightIndex = (data.night || 1) - 1;
   }
 
+  preload() {
+    this.load.image('tung-sahur', 'src/images/tung-sahur.png');
+  }
+
   create() {
     const nightConfig = NIGHTS[this.nightIndex];
     this.gameOver = false;

@@ -79,6 +79,12 @@ export class CameraSystem {
     this.mapNodes = {};
     this.mapLines = [];
     this.mapContainer = [];
+
+    // --- Enemy image sprite for Tung Sahur ---
+    this.tungSahurImage = scene.add.image(350, 310, 'tung-sahur')
+      .setDepth(104)
+      .setVisible(false)
+      .setDisplaySize(70, 90);
   }
 
   /**
@@ -264,6 +270,8 @@ export class CameraSystem {
     this.enemyText.setVisible(false);
     this.recIndicator.setVisible(false);
     this.mapContainer.forEach((el) => el.setVisible(false));
+    // Hide Tung Sahur image when closing camera
+    this.tungSahurImage.setVisible(false);
   }
 
   /** Switch to a specific camera feed. */
@@ -325,13 +333,22 @@ export class CameraSystem {
 
     // Update camera feed text — only for the room being viewed
     const present = enemies.filter((e) => e.currentRoom === this.currentCameraId && !e.atDoor);
+    let tungPresent = false;
     if (present.length > 0) {
-      const lines = present.map((e) => `${e.emoji}  ${e.name} is here!`);
+      const lines = present.map((e) => {
+        if (e.id === 'tungtung') {
+          tungPresent = true;
+          return `${e.name} is here!`;
+        }
+        return `${e.emoji}  ${e.name} is here!`;
+      });
       this.enemyText.setText(lines.join('\n'));
       this.enemyText.setColor('#ff2222');
     } else {
       this.enemyText.setText('— room clear —');
       this.enemyText.setColor('#336633');
     }
+    // Show/hide Tung Sahur image
+    this.tungSahurImage.setVisible(tungPresent);
   }
 }

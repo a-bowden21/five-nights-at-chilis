@@ -5,13 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Five Nights at Chili's</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-    canvas { display: block; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #181818;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      min-width: 100vw;
+    }
+    #game-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 1024px;
+      height: 768px;
+      margin: 0 auto;
+      box-shadow: 0 0 32px #000a;
+      background: #222;
+      border-radius: 12px;
+    }
+    canvas {
+      display: block;
+      margin: 0 auto;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
+  <div id="game-container"></div>
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>
-
