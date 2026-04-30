@@ -25,7 +25,7 @@ export class MenuScene extends Phaser.Scene {
 
     // Night select buttons
     for (let i = 1; i <= 5; i++) {
-      const btn = this.add.text(512, 400 + i * 50, `► Night ${i}`, {
+      const btn = this.add.text(512, 370 + i * 50, `► Night ${i}`, {
         fontFamily: 'Courier New',
         fontSize: '26px',
         color: '#ffcc00',
@@ -37,5 +37,20 @@ export class MenuScene extends Phaser.Scene {
         this.scene.start('GameScene', { night: i });
       });
     }
+
+    // Controls button
+    const controlsBtn = this.add.text(512, 700, '[ CONTROLS ]', {
+      fontFamily: 'Courier New',
+      fontSize: '20px',
+      color: '#00ccff',
+      backgroundColor: '#111',
+      padding: { x: 16, y: 8 },
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+
+    controlsBtn.on('pointerover', () => controlsBtn.setColor('#ffffff'));
+    controlsBtn.on('pointerout', () => controlsBtn.setColor('#00ccff'));
+    controlsBtn.on('pointerdown', () => {
+      this.scene.start('ControlsScene');
+    });
   }
 }
